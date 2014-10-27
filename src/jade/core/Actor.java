@@ -293,7 +293,7 @@ public abstract class Actor
         return holds(Actor.class);
     }
 
-    void setWorld(World world)
+    public void setWorld(World world)
     {
         this.world = world;
         for(Actor held : holds)
