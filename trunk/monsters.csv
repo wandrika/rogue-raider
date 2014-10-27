@@ -1,4 +1,4 @@
 name;face;color;accuracy;damageMin;damageMax;defense;hitPoints;sight;minLevel;maxLevel;experience;healingSpeed
-rat;r;gray;80;1;3;0;6;8;1;10;0;20
+rat;r;gray;80;1;1;0;6;8;1;10;0;20
 monkey;m;brown;80;1;3;0;7;10;1;10;0;20
-vampire bat;v;darkgray;50;1;3;0;5;5;1;10;0;30
+vampire bat;v;lightgray;50;1;2;0;5;5;1;10;0;30

@@ -3,7 +3,6 @@ package test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import test.core.ActorTest;
-import test.core.MessengerTest;
 import test.core.WorldTest;
 import test.fov.RayCasterTest;
 import test.fov.ShadowCasterTests;
@@ -31,7 +30,7 @@ import test.util.datatypes.CoordinateTest;
 import test.util.datatypes.DirectionTest;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ActorTest.class, MessengerTest.class, WorldTest.class, RayCasterTest.class,
+@Suite.SuiteClasses({ActorTest.class, WorldTest.class, RayCasterTest.class,
         ShadowCasterTests.class, ViewFieldTest.class, GeneratorTest.class, FenceTest.class,
         SprinklerTest.class, CellularTest.class, MazeTest.class, TerrainTest.class,
         TraditionalTest.class, AStarTest.class, BresenhamTest.class, PathFinderTest.class,

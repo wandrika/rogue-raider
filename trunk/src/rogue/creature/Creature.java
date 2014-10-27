@@ -1,13 +1,10 @@
 package rogue.creature;
 
 import java.awt.Color;
-import java.lang.reflect.Field;
 import java.util.Collection;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import jade.core.Actor;
-import jade.fov.RayCaster;
+import jade.fov.ModifiedRayCaster;
 import jade.ui.Camera;
 import jade.ui.ColorConstants;
 import jade.util.Capitalizer;
@@ -32,7 +29,8 @@ public abstract class Creature extends Actor implements Camera
 	
 	protected String name;
 	
-	protected RayCaster view = new RayCaster();
+	protected ModifiedRayCaster view = new ModifiedRayCaster();
+	//protected ShadowCaster view = new ShadowCaster();
 	
 	/* Combat rules:
 	 * Each combatant has an accuracy rating. This is the percentage of their attacks that will ordinarily hit;
@@ -69,7 +67,7 @@ public abstract class Creature extends Actor implements Camera
 	}
 
 	public Creature(char face, String color, String background) {
-		super(ColoredChar.create(face, ColorConstants.get(color), ColorConstants.get(background)));
+		super(ColoredChar.create(face, ColorConstants.getColor(color), ColorConstants.getColor(background)));
 	}
 	
 	public Creature(char face, int colorCode) {
@@ -77,39 +75,12 @@ public abstract class Creature extends Actor implements Camera
 	}
 	
 	public Creature(char face, String color) {
-		super(ColoredChar.create(face, ColorConstants.get(color)));
+		super(ColoredChar.create(face, ColorConstants.getColor(color)));
 	}
 	
 	public Creature(char face) {
 		super(ColoredChar.create(face));
 
-	}
-
-	public void setProperties(Map<String,String> props) throws MonsterMapException{
-		for (Entry<String, String> entry: props.entrySet()){
-			try{
-				Field f = Creature.class.getDeclaredField(entry.getKey());
-				//mame len fieldy typu String a int
-				//ak pribudne boolean alebo nieco ine, pridat sem nove ify
-				try {
-					if (f.getType().equals(String.class)) {
-						f.set(this, entry.getValue());
-					}
-					else{
-						f.setInt(this, Integer.parseInt(entry.getValue()));
-					}
-				} catch (IllegalArgumentException e) {
-					throw new MonsterMapException(e.getMessage(),e);
-				} catch (IllegalAccessException e) {
-					throw new MonsterMapException(e.getMessage(),e);
-				}
-
-			}
-			catch (NoSuchFieldException nsf){
-				//nic nerobit, take pole sa nenamapuje
-			}
-		}
-		this.actualHitPoints = this.hitPoints;
 	}
 
     void addExperience(int exp) {	
@@ -171,8 +142,8 @@ public abstract class Creature extends Actor implements Camera
 						enemy.decreaseHitPoints(damage);
 						if (enemy.actualHitPoints >0){
 							Color color;
-							if(this instanceof Player) color = ColorConstants.get("darkgreen");
-							else color = ColorConstants.get("blood");
+							if(this instanceof Player) color = ColorConstants.getColor("darkgreen");
+							else color = ColorConstants.getColor("blood");
 							MessageQueue.add(Capitalizer.capitalize(this.name)+" hit "+enemy.name+" who has "+enemy.actualHitPoints+" hitpoints remaining.", color);
 						}
 						else {

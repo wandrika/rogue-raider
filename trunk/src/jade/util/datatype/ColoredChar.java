@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * An immutable tuple of ({@code char}, {@code Color}). This is useful for storing screen display
  * information.
@@ -82,10 +83,33 @@ public class ColoredChar
      */
     public ColoredChar getDimmed(){
     	char ch = this.ch;
-    	Color col = this.color.darker();
+    	int b = Math.min(100, this.color.getBlue());
+    	Color col = new Color(this.color.getRed()/10,this.color.getGreen()/10,b);
+    			//this.color.darker();
     	Color back = null;
-    	if (this.background!=null) back = this.background.darker();
+    	if (this.background!=null) {
+    		b = Math.min(100, this.background.getBlue());
+    		back = new Color(this.color.getRed()/10,this.color.getGreen()/10,b);
+    	}
+    			//this.background.darker();
     	return ColoredChar.create(ch, col, back);
+    }
+    
+    
+    public ColoredChar applyLight(Light light){
+    	int red = Math.min(255, this.color.getRed() * light.getRed() / 200);
+    	int green = Math.min(255, this.color.getGreen() * light.getGreen() / 200);
+    	int blue = Math.min(255, this.color.getBlue() * light.getBlue() / 200);
+    	if(red<50 && green<50 && blue<50){
+    		red=50;green=50;blue=50;
+    	}
+    	int bred=0,bgreen=0,bblue=0;
+    	if (this.background!=null){
+    		bred = Math.min(255, this.background.getRed() * light.getRed() / 200);
+        	bgreen = Math.min(255, this.background.getGreen() * light.getGreen() / 200);
+        	bblue = Math.min(255, this.background.getBlue() * light.getBlue() / 200);
+    	}
+    	return ColoredChar.create(this.ch, new Color(red,green,blue), new Color(bred,bgreen,bblue));
     }
     
     /**

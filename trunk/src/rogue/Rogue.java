@@ -26,7 +26,7 @@ public class Rogue {
     	Terminal term = TermPanel.getFramedTerminal("Jade Rogue");
     	player.setTerminal(term);
         term.registerCamera(player, player.pos());
-        
+        world.initLight();
         while(!player.expired())
         {
         	world.markSeen(player.getViewField());

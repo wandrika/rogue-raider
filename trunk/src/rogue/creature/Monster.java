@@ -5,6 +5,7 @@ import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -19,7 +20,7 @@ public class Monster extends Creature
 	protected Coordinate lastSeenEnemyPos = null;
 
 	//TODO remove unnecessary constructors
-	
+
 	public Monster(char face, int colorCode, int backgroundCode) {
 		super(face, colorCode, backgroundCode);
 		this.status = Status.WANDERING;
@@ -29,29 +30,30 @@ public class Monster extends Creature
 		super(face, color, background);
 		this.status = Status.WANDERING;
 	}
-	
+
 	public Monster(char face, int colorCode) {
 		super(face, colorCode);
 		this.status = Status.WANDERING;
 	}
-	
+
 	public Monster(char face, String color) {
 		super(face, color);
 		this.status = Status.WANDERING;
 	}
-	
+
 	public Monster(char face) {
 		super(face);
 		this.status = Status.WANDERING;
 	}
 
-	@Override
 	public void setProperties(Map<String,String> props) throws MonsterMapException{
-		super.setProperties(props);
-		//zial kod sa tu musi zopakovat, ale to je fakt uz jedina skareda vec na tomto navrhu
+		List<Field> fields = new ArrayList<Field>();
+		fields.addAll(Arrays.asList(Monster.class.getDeclaredFields())); 
+		fields.addAll(Arrays.asList(Creature.class.getDeclaredFields())); 
 		for (Entry<String, String> entry: props.entrySet()){
-			try{
-				Field f = Monster.class.getDeclaredField(entry.getKey());
+
+			Field f = getFieldByName(fields, entry.getKey());
+			if (f!=null){
 				//mame len fieldy typu String a int
 				//ak pribudne boolean alebo nieco ine, pridat sem nove ify
 				try {
@@ -66,14 +68,19 @@ public class Monster extends Creature
 				} catch (IllegalAccessException e) {
 					throw new MonsterMapException(e.getMessage(),e);
 				}
+			}
 
-			}
-			catch (NoSuchFieldException nsf){
-				//nic nerobit, take pole sa nenamapuje
-			}
 		}
+		this.actualHitPoints = this.hitPoints;
 	}
-	
+
+	private Field getFieldByName(List<Field> fields, String name){
+		for (Field f: fields){
+			if (f.getName().equals(name)) return f;
+		}
+		return null;
+	}
+
 	public boolean seesEnemy()
 	{
 		Collection<Coordinate> coVidiTvor = this.getViewField();

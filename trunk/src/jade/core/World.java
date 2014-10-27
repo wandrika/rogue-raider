@@ -8,20 +8,23 @@ import jade.util.Lambda;
 import jade.util.Lambda.FilterFunc;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
+import jade.util.datatype.Light;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import rogue.contraption.LightSource;
 import rogue.creature.Monster;
 import rogue.creature.Player;
 
 /**
  * Represents a game world on which {@code Actor} can interact.
  */
-public abstract class World extends Messenger
+public abstract class World 
 {
     private int width;
     private int height;
@@ -30,7 +33,6 @@ public abstract class World extends Messenger
     private List<Class<? extends Actor>> drawOrder;
     private List<Class<? extends Actor>> actOrder;
     public PathFinder pathFinder = new AStar();
-    
     
     /**
      * Constructs a new {@code World} with the given dimensions. Both width and height must be
@@ -56,9 +58,10 @@ public abstract class World extends Messenger
         actOrder = new ArrayList<Class<? extends Actor>>();
         //v akom poradi sa deju akcie
         //TODO ak budeme mat dvere, kuzla a dalsie actory, pridat ich sem
+        
         actOrder.add(Player.class);
         actOrder.add(Monster.class);
-        
+        actOrder.add(LightSource.class);
         //TODO najst to spravne poradie
    }
 
@@ -69,13 +72,14 @@ public abstract class World extends Messenger
      */
     public void tick()
     {
+    	resetLight();
         for(Class<? extends Actor> cls : actOrder)
             for(Actor actor : getActors(cls))
                 actor.act();
 
         removeExpired();
     }
-
+    
     /**
      * Returns the width of the {@code World}.
      * @return the width of the {@code World}
@@ -347,7 +351,10 @@ public abstract class World extends Messenger
     	//TODO ak chceme implementovat farebne pozadia, toto treba zmenit
     	//mozno treba pouzit google TreeMultimap
     	//ak vidime policko aktualne, vykresli sa policko aj vsetko co je na nom
-    	if (grid[x][y].seenNow) return lookAll(x, y).get(0);
+    	if (grid[x][y].seenNow){
+    		ColoredChar c = lookAll(x, y).get(0);
+    		return c.applyLight(this.lightAt(x, y));
+    	}
     	//ak sme ho videli predtym, vykresli sa iba policko v tmavsej farbe
     	if (grid[x][y].seen) return tileAt(x,y).getDimmed();
     	//inak sa nevykresli nic
@@ -379,6 +386,27 @@ public abstract class World extends Messenger
         return grid[x][y].face;
     }
 
+    public Light lightAt(int x, int y)
+    {
+        Guard.argumentsInsideBounds(x, y, width, height);
+        return grid[x][y].light;
+    }
+    
+    public void resetLight(){
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				grid[i][j].light.resetLight();
+
+			}
+		}
+    }
+    
+    public void initLight(){
+    	resetLight();
+        for(Actor actor : getActors(LightSource.class))
+            actor.act();
+    }
+    
     /**
      * Returns the face of the tile at the provided coordinates.
      * @param coord the value of the position being queried
@@ -615,6 +643,7 @@ public abstract class World extends Messenger
         public Set<Actor> actors;
         public boolean seen; //ci uz toto policko videl
         public boolean seenNow; //ci ho vidi prave teraz
+        public Light light = new Light(Color.gray,0,0,0,0);
 
         public Tile()
         {
