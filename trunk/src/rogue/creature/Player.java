@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import rogue.contraption.LightSource;
+import rogue.items.Flare;
 
 import jade.ui.Terminal;
 import jade.util.datatype.Coordinate;
@@ -16,7 +17,7 @@ public class Player extends Creature
 	private List<Monster> enemiesSeen = new ArrayList<Monster>();
 	//range is equal to the player's line of sight
 	//fades only slightly
-	public static LightSource minersLight = new LightSource(' ',"minersLight",0,0,15,15,90);
+	public static LightSource minersLight = new LightSource(' ',"minersLight",15,15,90);
 
 	public Player()
 	{
@@ -70,10 +71,23 @@ public class Player extends Creature
 			case 'q':
 				expire();
 				break;
+			case 'u':
+				//TODO lepsie metody a collectable
+				if(this.holds(Flare.class)!=null && !this.holds(Flare.class).isEmpty()){
+					Flare f = (Flare) this.holds(Flare.class).toArray()[0];
+					f.lightFlare();
+				}
+				break;
 			default:
 				Direction dir = Direction.keyToDir(key);
 				if(dir != null)
 					move(dir);
+				Flare f = world.getActorAt(Flare.class, this.x(), this.y());
+				if(f!=null) {
+					f.setWorld(null);
+					f.attach(this);
+					System.out.println("I have the flare now");
+				}
 				break;
 			}
 		}

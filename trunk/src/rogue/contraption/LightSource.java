@@ -17,7 +17,7 @@ public class LightSource extends Actor {
 	private int rangeMin, rangeMax;
 	protected ModifiedRayCaster lightView = new ModifiedRayCaster();
 
-	public LightSource(char face, String colorName, int min, int max, int rangeMin, int rangeMax, int fadeToPercent){
+	public LightSource(char face, String colorName, int rangeMin, int rangeMax, int fadeToPercent){
 		super(ColoredChar.create(face, ColorConstants.getLight(colorName).getColor()));
 		this.lightColor = ColorConstants.getLight(colorName);
 		this.rangeMin = rangeMin;
