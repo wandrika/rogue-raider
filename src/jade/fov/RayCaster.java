@@ -15,6 +15,7 @@ import java.util.HashSet;
  */
 public class RayCaster extends ViewField
 {
+	//WARNING: don't use, it leaves out some tiles that should be visible, e.g. bits of corridor walls
     private Bresenham raycaster;
 
     /**

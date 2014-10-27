@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import rogue.contraption.LightSource;
+
 import jade.ui.Terminal;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
@@ -12,6 +14,9 @@ public class Player extends Creature
 {
 	private Terminal term;
 	private List<Monster> enemiesSeen = new ArrayList<Monster>();
+	//range is equal to the player's line of sight
+	//fades only slightly
+	public static LightSource minersLight = new LightSource(' ',"minersLight",0,0,15,15,90);
 
 	public Player()
 	{
@@ -25,7 +30,8 @@ public class Player extends Creature
 		this.name = "you";
 		this.experience = 0;
 		this.healingSpeed = 20;
-		this.sight = 10;
+		this.sight = 15;
+		minersLight.attach(this);
 	}
 
 	//must be called immediately after creating the game terminals

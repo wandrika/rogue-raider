@@ -48,7 +48,7 @@ public class MonsterCatalog {
 		int index = Dice.global.nextInt(0, povolene.size()-1);
 		String vzor = povolene.get(index);
 		Map<String,String> line = catalog.get(vzor);
-		String stringFace = line.get("face");	//toto musime brat osobitne
+		String stringFace = line.get("face");	//toto musime brat osobitne, face je vlastnostou Actora
 		char charFace = stringFace.charAt(0);
 		//int intColor = Integer.parseInt(line.get("color"));
 		//Monster m = new Monster(charFace,intColor);

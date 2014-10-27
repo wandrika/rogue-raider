@@ -19,14 +19,14 @@ import java.util.Set;
  * {@code Actor}. A timer {@code Actor} could be attached to the spell which simple counts an
  * appropriate amount of turns, then expires the spell {@code Actor}.
  */
-public abstract class Actor extends Messenger
+public abstract class Actor 
 {
     private ColoredChar face;
 //    public void setFace(ColoredChar face) {
 //		this.face = face;
 //	}
 
-	private World world;
+	protected World world;
     private MutableCoordinate pos;
     private boolean expired;
     private Actor holder;
