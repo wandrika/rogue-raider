@@ -205,8 +205,10 @@ public abstract class World
             }
         });
 
-        for(Actor actor : expired)
+        for(Actor actor : expired){
             removeActor(actor);
+            System.out.println("removing "+actor);
+        }
     }
 
     /**
@@ -627,7 +629,7 @@ public abstract class World
     void registerActor(Actor actor)
     {
         register.add(actor);
-        for(Actor held : actor.holds(Actor.class))
+        for(Actor held : actor.getHeldItems(Actor.class))
             registerActor(held);
     }
 

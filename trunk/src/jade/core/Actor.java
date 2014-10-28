@@ -200,6 +200,8 @@ public abstract class Actor
         expired = true;
         for(Actor held : holds)
             held.expire();
+        if(this.held())
+        	this.dropFromHolder();
     }
 
     /**
@@ -232,7 +234,7 @@ public abstract class Actor
      * currently be held when calling this method. If the {@code Actor} is bound, it will be placed
      * on the {@code World} at the current position of the holder.
      */
-    public void detach()
+    public void dropFromHolder()
     {
         Guard.verifyState(held());
 
@@ -268,7 +270,7 @@ public abstract class Actor
      * @param holder the holder being tested
      * @return true if the {@code Actor} is held by the specified holder
      */
-    public final boolean held(Actor holder)
+    public final boolean isHeldBy(Actor holder)
     {
         return this.holder == holder;
     }
@@ -279,18 +281,30 @@ public abstract class Actor
      * @param cls the class being queried
      * @return all the {@code Actor} currently being held by this one
      */
-    public <T extends Actor> Collection<T> holds(Class<T> cls)
+    public <T extends Actor> Collection<T> getHeldItems(Class<T> cls)
     {
         return Lambda.toSet(Lambda.filterType(holds, cls));
     }
 
     /**
+     * Returns the first {@code Actor} of the specified class currently being held by this one
+     * (or null if there are none).
+     * @param <T> the generic type of the class being queried
+     * @param cls the class being queried
+     * @return  the first {@code Actor} of the specified class currently being held by this one
+     */
+    public <T extends Actor> T getFirstHeldItem(Class<T> cls)
+    {
+    	return Lambda.first(Lambda.filterType(holds, cls));
+    }
+    
+    /**
      * Returns all the {@code Actor} currently being held by this one.
      * @return all the {@code Actor} currently being held by this one
      */
-    public final Collection<Actor> holds()
+    public final Collection<Actor> getAllHeldItems()
     {
-        return holds(Actor.class);
+        return getHeldItems(Actor.class);
     }
 
     public void setWorld(World world)
