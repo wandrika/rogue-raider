@@ -32,14 +32,15 @@ public class Player extends Creature
 		this.experience = 0;
 		this.healingSpeed = 20;
 		this.sight = 15;
-		minersLight.attach(this);
+		minersLight.setCollectable(true);
+		minersLight.attachTo(this);
 	}
 
 	//must be called immediately after creating the game terminals
 	public void setTerminal(Terminal t){
 		this.term = t;
 	}
-	
+
 	public void lookForEnemies()
 	{
 		enemiesSeen.clear();
@@ -67,7 +68,7 @@ public class Player extends Creature
 		}
 		return null;
 	}
-	
+
 	@Override
 	public void act()
 	{
@@ -81,7 +82,7 @@ public class Player extends Creature
 			switch(key)
 			{
 			// tu pridat ine ciselne kody
-			case 27: //'q'
+			case 81: //'q'
 				expire();
 				break;
 			case 44: //','
@@ -96,13 +97,14 @@ public class Player extends Creature
 				break;
 			default:
 				Direction dir = Direction.keyToDir(key);
-				if(dir != null)
+				if(dir != null){
 					move(dir);
-				f = world.getActorAt(Flare.class, this.x(), this.y());
-				if(f!=null) {
-					world.removeActor(f);
-					f.attach(this);
-					System.out.println("I have the flare now");
+					f = world.getActorAt(Flare.class, this.x(), this.y());
+					if(f!=null) {
+						world.removeActor(f);
+						f.attachTo(this);
+						System.out.println("I have the flare now");
+					}
 				}
 				break;
 			}

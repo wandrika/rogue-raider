@@ -27,12 +27,13 @@ public abstract class Actor
 //	}
 
 	protected World world;
-    private MutableCoordinate pos;
-    private boolean expired;
-    private Actor holder;
-    private Set<Actor> holds;
+    protected MutableCoordinate pos;
+    protected boolean expired;
+    protected Actor holder;
+    protected Set<Actor> holds;
+    protected boolean collectable = false;
 
-    /**
+	/**
      * Constructs a new {@code Actor} with the given face.
      * @param face the face of the {@code Actor}
      */
@@ -204,6 +205,14 @@ public abstract class Actor
         	this.dropFromHolder();
     }
 
+    public boolean isCollectable() {
+		return collectable;
+	}
+
+	public void setCollectable(boolean collectable) {
+		this.collectable = collectable;
+	}
+    
     /**
      * Attaches this {@code Actor} to another. Note that the {@code Actor} must not be currently
      * held or bound to a {@code World} when calling this method. The position of this {@code Actor}
@@ -212,12 +221,13 @@ public abstract class Actor
      * not be accessible through {@code world.getActorAt()} or {@code world.getActorsAt()}.
      * @param holder the new holder of the {@code Actor}
      */
-    public void attach(Actor holder)
+    public void attachTo(Actor holder)
     {
         Guard.verifyState(!held());
         Guard.verifyState(!bound());
         Guard.argumentIsNotNull(holder);
         Guard.validateArgument(holder != this);
+        Guard.verifyState(collectable);
 
         this.holder = holder;
         propagatePos(holder.pos);

@@ -462,7 +462,7 @@ public class WorldTest extends CoreTest
     {
         Actor holder = new ConcreteActor(ColoredChar.create('D'));
         world.addActor(holder, 5, 5);
-        actor.attach(holder);
+        actor.attachTo(holder);
         actor.expire();
         world.removeActor(actor);
         
