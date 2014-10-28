@@ -6,6 +6,7 @@ import java.util.List;
 
 import rogue.contraption.LightSource;
 import rogue.items.Flare;
+import rogue.items.Weapon;
 
 import jade.ui.Terminal;
 import jade.util.datatype.Coordinate;
@@ -18,6 +19,7 @@ public class Player extends Creature
 	//range is equal to the player's line of sight
 	//fades only slightly
 	public static LightSource minersLight = new LightSource(' ',"minersLight",true,15,15,90);
+	public static Weapon pistols = new Weapon("pistols",2,100000,6);
 
 	public Player()
 	{
@@ -34,6 +36,7 @@ public class Player extends Creature
 		this.sight = 15;
 		minersLight.setCollectable(true);
 		minersLight.attachTo(this);
+		pistols.attachTo(this);
 	}
 
 	//must be called immediately after creating the game terminals
@@ -82,8 +85,14 @@ public class Player extends Creature
 			switch(key)
 			{
 			// tu pridat ine ciselne kody
-			case 81: //'q'
-				expire();
+//			case 81: //'q'
+//				expire();
+//				break;
+			case 70: //'f'
+				if(!enemiesSeen.isEmpty()){
+					Monster chosen = enemiesSeen.get(0);
+					
+				}
 				break;
 			case 44: //','
 				f = getLitFlare();
