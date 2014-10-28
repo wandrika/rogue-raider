@@ -61,7 +61,7 @@ public class MonsterCatalog {
 public static void main(String[]args) throws MonsterMapException{
 	for (int i=0; i<20; i++){
 		Monster m = MonsterCatalog.createRandomMonsterForLevel(1);
-		System.out.println(m.name);
+		System.out.println(m.getName());
 	}
 }
 

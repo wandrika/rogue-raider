@@ -27,7 +27,7 @@ public abstract class Creature extends Actor implements Camera
 	protected int healingSpeed; //za kolko tahov zregeneruje 1 HP
 	protected int healing;
 	
-	protected String name;
+
 	
 	protected ModifiedRayCaster view = new ModifiedRayCaster();
 	//protected ShadowCaster view = new ShadowCaster();
@@ -114,10 +114,7 @@ public abstract class Creature extends Actor implements Camera
 	public int getActualHitPoints() {
 		return actualHitPoints;
 	}
-		
-	public String getName() {
-		return name;
-	}
+
 
 	protected void decreaseHitPoints(int amount) {
 		this.actualHitPoints = this.actualHitPoints - amount;
