@@ -10,14 +10,12 @@ import rogue.creature.Player;
 public class Level extends World
 {
     private final static Generator gen = getLevelGenerator();
-    private final static LightGenerator lightGen = new LightGenerator();
-
 
     public Level(int width, int height, Player player)
     {
         super(width, height);
         gen.generate(this);
-        lightGen.addLights(this, 10);
+        LightGenerator.addLights(this, 10);
         addActor(player);
     }
 

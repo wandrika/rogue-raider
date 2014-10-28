@@ -17,7 +17,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import rogue.contraption.AbstractDoor;
 import rogue.contraption.LightSource;
+import rogue.creature.Creature;
 import rogue.creature.Monster;
 import rogue.creature.Player;
 
@@ -53,11 +55,14 @@ public abstract class World
         register = new HashSet<Actor>();
 
         drawOrder = new ArrayList<Class<? extends Actor>>();
-        drawOrder.add(Actor.class);
-
+        //player a prisery sa zobrazuju nad vsetkym ostatnym?
+        drawOrder.add(Creature.class);
+        drawOrder.add(AbstractDoor.class);
+        drawOrder.add(LightSource.class);
+        
         actOrder = new ArrayList<Class<? extends Actor>>();
         //v akom poradi sa deju akcie
-        //TODO ak budeme mat dvere, kuzla a dalsie actory, pridat ich sem
+        //TODO ak budeme mat dvere, kuzla a dalsie actory, pridat ich sem (len take, ktore nieco robia)
         
         actOrder.add(Player.class);
         actOrder.add(Monster.class);
@@ -646,6 +651,7 @@ public abstract class World
         public boolean seen; //ci uz toto policko videl
         public boolean seenNow; //ci ho vidi prave teraz
         public Light light = new Light(Color.gray,0,0,0,0);
+        //to je jedno aka je tam farba, updatuje sa to pred vykreslenim
 
         public Tile()
         {
