@@ -18,7 +18,6 @@ public class Door extends Actor {
 	
 	@Override
 	public void act() {
-		// TODO co budu robit dvere samy od seba - asi nic
 
 	}
 
