@@ -2,6 +2,15 @@ package jade.util.datatype;
 
 import java.awt.Color;
 
+/**
+ * Class representing light with its red/green/blue parts and 
+ * also random parts that allow some variability.
+ * This is inspired by Brogue light model, but adapted
+ * to Java objects.
+ * Special thanks to Brian Walker!
+ * @author wandrika
+ *
+ */
 public class Light {
 	
 	public Light() {
