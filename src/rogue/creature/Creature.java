@@ -2,9 +2,13 @@ package rogue.creature;
 
 import java.awt.Color;
 import java.util.Collection;
+import java.util.List;
+
+import rogue.items.Weapon;
 
 import jade.core.Actor;
 import jade.fov.ModifiedRayCaster;
+import jade.path.Bresenham;
 import jade.ui.Camera;
 import jade.ui.ColorConstants;
 import jade.util.Capitalizer;
@@ -15,10 +19,11 @@ import jade.util.datatype.MessageQueue;
 
 public abstract class Creature extends Actor implements Camera
 {
-	
+
 	protected int hitPoints;
 	protected int actualHitPoints;
 	protected int accuracy;
+	protected int shootingAccuracy;
 	protected int defense;
 	protected int damageMin;
 	protected int damageMax;
@@ -26,12 +31,14 @@ public abstract class Creature extends Actor implements Camera
 	protected int experience;
 	protected int healingSpeed; //za kolko tahov zregeneruje 1 HP
 	protected int healing;
-	
 
-	
+
+
 	protected ModifiedRayCaster view = new ModifiedRayCaster();
+	protected Bresenham aimer = new Bresenham();
+
 	//protected ShadowCaster view = new ShadowCaster();
-	
+
 	/* Combat rules:
 	 * Each combatant has an accuracy rating. This is the percentage of their attacks that will ordinarily hit;
 	 * higher numbers are better for them. Numbers over 100 are permitted.
@@ -69,44 +76,53 @@ public abstract class Creature extends Actor implements Camera
 	public Creature(char face, String color, String background) {
 		super(ColoredChar.create(face, ColorConstants.getColor(color), ColorConstants.getColor(background)));
 	}
-	
+
 	public Creature(char face, int colorCode) {
 		super(ColoredChar.create(face, new Color(colorCode)));
 	}
-	
+
 	public Creature(char face, String color) {
 		super(ColoredChar.create(face, ColorConstants.getColor(color)));
 	}
-	
+
 	public Creature(char face) {
 		super(ColoredChar.create(face));
 
 	}
 
-    void addExperience(int exp) {	
-    	this.experience += exp;
-//    	while (rogue.experience >= levelPoints[rogue.experienceLevel - 1] && rogue.experienceLevel < MAX_EXP_LEVEL) {
-//    		rogue.experienceLevel++;
-//    		player.info.maxHP += 5;
-//    		player.currentHP += (5 * player.currentHP / (player.info.maxHP - 5));
-//    		updatePlayerRegenerationDelay();
-//    		player.info.accuracy += 10;
-//    		rogue.gainedLevel = true;
-//    	}
-    }
+	public List<Coordinate> aim(int x, int y){
+		List<Coordinate> shootingPath = aimer.getPath(world, this.x(), this.y(), x, y);
+		if(shootingPath!=null){
+			//FIXME ukazat policko
+			//world.setTile(face, passable, x, y)
+		}
+		return shootingPath;
+	}
 
-    void heal(){
-    	if (this.healingSpeed>0 && this.actualHitPoints<this.hitPoints){
-        	this.healing +=1;
-        	if (this.healing >= this.healingSpeed){
-        		this.actualHitPoints += 1;
-        		this.healing -= this.healingSpeed;
-        		//MessageQueue.add(Capitalizer.capitalize(this.name)+" have "+this.actualHitPoints+" hitpoints now.");
-        	}
-    	}
+	void addExperience(int exp) {	
+		this.experience += exp;
+		//    	while (rogue.experience >= levelPoints[rogue.experienceLevel - 1] && rogue.experienceLevel < MAX_EXP_LEVEL) {
+		//    		rogue.experienceLevel++;
+		//    		player.info.maxHP += 5;
+		//    		player.currentHP += (5 * player.currentHP / (player.info.maxHP - 5));
+		//    		updatePlayerRegenerationDelay();
+		//    		player.info.accuracy += 10;
+		//    		rogue.gainedLevel = true;
+		//    	}
+	}
 
-    }
-	
+	void heal(){
+		if (this.healingSpeed>0 && this.actualHitPoints<this.hitPoints){
+			this.healing +=1;
+			if (this.healing >= this.healingSpeed){
+				this.actualHitPoints += 1;
+				this.healing -= this.healingSpeed;
+				//MessageQueue.add(Capitalizer.capitalize(this.name)+" have "+this.actualHitPoints+" hitpoints now.");
+			}
+		}
+
+	}
+
 	public int getHitPoints() {
 		return hitPoints;
 	}
@@ -146,7 +162,7 @@ public abstract class Creature extends Actor implements Camera
 						else {
 							MessageQueue.add(Capitalizer.capitalize(this.name)+" killed "+enemy.name+".");
 							this.addExperience(1);
-							this.accuracy += 1;
+							this.accuracy = Math.min(100, accuracy+1);
 						}
 					}
 					else{
@@ -159,10 +175,38 @@ public abstract class Creature extends Actor implements Camera
 		}
 	}
 
+	public void shoot(int x, int y, Weapon gun){
+		if (world().isCreatureAt(x,y)) {
+			Creature enemy = world().getActorAt(Creature.class, x, y);
+			int prob = shootingAccuracy;
+			if (Dice.global.chance(prob)){
+				//zasah!
+				gun.shoot();
+				int damage = Dice.global.nextInt(gun.getMinDamage(), gun.getMaxDamage());
+				enemy.decreaseHitPoints(damage);
+				if (enemy.actualHitPoints >0){
+					Color color;
+					if(this instanceof Player) color = ColorConstants.getColor("darkgreen");
+					else color = ColorConstants.getColor("blood");
+					MessageQueue.add(Capitalizer.capitalize(this.name)+" shot "+enemy.name+" who has "+enemy.actualHitPoints+" hitpoints remaining.", color);
+				}
+				else {
+					MessageQueue.add(Capitalizer.capitalize(this.name)+" killed "+enemy.name+".");
+					this.addExperience(1);
+					this.shootingAccuracy = Math.min(100, shootingAccuracy+1);
+				}
+			}
+			else{
+				//miss
+				MessageQueue.add(Capitalizer.capitalize(this.name)+" missed "+enemy.name+".");
+			}
+		}
+	}
+
 	@Override
 	public Collection<Coordinate> getViewField() {
 		return view.getViewField(this.world(), this.pos(), this.sight);
 	}
-	
+
 
 }
