@@ -2,6 +2,7 @@ package jade.core;
 
 import jade.path.AStar;
 import jade.path.PathFinder;
+import jade.ui.ColorConstants;
 import jade.util.Dice;
 import jade.util.Guard;
 import jade.util.Lambda;
@@ -35,6 +36,7 @@ public abstract class World
     private List<Class<? extends Actor>> drawOrder;
     private List<Class<? extends Actor>> actOrder;
     public PathFinder pathFinder = new AStar();
+    protected Color baseLight;
     
     /**
      * Constructs a new {@code World} with the given dimensions. Both width and height must be
@@ -45,7 +47,8 @@ public abstract class World
     public World(int width, int height)
     {
         Guard.argumentsArePositive(width, height);
-
+        
+        baseLight = new Color(-8092540);
         this.width = width;
         this.height = height;
         grid = new Tile[width][height];
@@ -402,7 +405,7 @@ public abstract class World
     public void resetLight(){
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				grid[i][j].light.resetLight();
+				grid[i][j].light.setLights(this.baseLight);
 
 			}
 		}

@@ -36,18 +36,6 @@ public class Light {
 		this.rand = rand;
 	}
 
-	public Light(int colorCode, int redRand, int greenRand, int blueRand, int rand) {
-		super();
-		Color c = new Color(colorCode);
-		this.red = c.getRed();
-		this.green = c.getGreen();
-		this.blue = c.getBlue();
-		this.redRand = redRand;
-		this.greenRand = greenRand;
-		this.blueRand = blueRand;
-		this.rand = rand;
-	}
-
 	public void copyFrom(Light other){
 		this.red = other.red;
 		this.green = other.green;
@@ -72,18 +60,18 @@ public class Light {
 		this.blue = b;
 	}
 
+	public void setLights(Color c){
+		this.red = c.getRed();
+		this.green = c.getGreen();
+		this.blue = c.getBlue();
+	}
+	
 	public void multiplyLight(int[] light, int multiplier){
 		if(light.length == 3){
 			this.red += light[0]*multiplier/200;
 			this.green += light[1]*multiplier/200;
 			this.blue += light[2]*multiplier/200;
 		}
-	}
-
-	public void resetLight(){
-		this.red = 0;
-		this.green = 0;
-		this.blue = 0;
 	}
 
 	public Color getColor() {

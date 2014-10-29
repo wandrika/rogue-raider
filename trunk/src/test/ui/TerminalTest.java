@@ -4,6 +4,7 @@ import jade.ui.Terminal;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import java.awt.Color;
+import java.util.List;
 import java.util.Map;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -28,6 +29,10 @@ public class TerminalTest
             @Override
             protected void drawScreen(Map<Coordinate, ColoredChar> buffer)
             {}
+
+			@Override
+			public void highlight(List<Coordinate> tiles) {
+			}
         };
         term = Mockito.spy(term);
     }

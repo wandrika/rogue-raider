@@ -6,6 +6,7 @@ import jade.util.datatype.Coordinate;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.List;
 import java.util.Map;
 
 //import javax.swing.BoxLayout;
@@ -131,6 +132,12 @@ public class TermPanel extends Terminal
 		statusScreen.repaint();
 	}
 
-
+	public void highlight(List<Coordinate> tiles)
+	{
+		if(tiles!=null){
+			screen.setHighlighted(tiles);
+			screen.repaint();
+		}
+	}
 
 }

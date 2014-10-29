@@ -8,6 +8,7 @@ import jade.util.datatype.Coordinate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -290,5 +291,9 @@ public class CameraTest
         {
             return 0;
         }
+
+		@Override
+		public void highlight(List<Coordinate> tiles) {
+		}
     }
 }

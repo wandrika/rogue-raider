@@ -97,6 +97,7 @@ public class ColoredChar
     
     
     public ColoredChar applyLight(Light light){
+    	//FIXME flatten to range 0-250, keep distances
     	int red = Math.min(255, this.color.getRed() * light.getRed() / 200);
     	int green = Math.min(255, this.color.getGreen() * light.getGreen() / 200);
     	int blue = Math.min(255, this.color.getBlue() * light.getBlue() / 200);

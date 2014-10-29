@@ -14,7 +14,7 @@ public class Flare extends LightSource{
 	@Override
 	public void act() {
 		if (isLit){
-			if(shining++ < timeToShine){
+			if(shining++ <= timeToShine){
 				super.act();
 			}
 			else{

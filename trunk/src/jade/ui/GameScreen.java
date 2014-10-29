@@ -9,7 +9,9 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -23,11 +25,13 @@ public class GameScreen extends JPanel implements KeyListener {
 	private int tileHeight;
 	private BlockingQueue<Integer> inputBuffer;
 	private Map<Coordinate, ColoredChar> screenBuffer;
+	private List<Coordinate> highlighted;
 
 	public GameScreen(int columns, int rows, int fontSize)
 	{
 		inputBuffer = new LinkedBlockingQueue<Integer>();
 		screenBuffer = new HashMap<Coordinate, ColoredChar>();
+		highlighted = new ArrayList<Coordinate>();
 
 		addKeyListener(this);
 		tileWidth = fontSize * 3 / 4;
@@ -52,11 +56,16 @@ public class GameScreen extends JPanel implements KeyListener {
 				if (ch.background() != null){
 					page.setColor(ch.background());
 					//a correction to have the rectangle around the character
-					page.fillRect(x, y-tileHeight+3, tileWidth, tileHeight);
+					page.fillRect(x-1, y-tileHeight+3, tileWidth, tileHeight);
+					if(highlighted.contains(coord)){
+						page.setColor(Color.red); //FIXME set a contrasting color according to background
+						page.fillRect(x-1, y-tileHeight+3, tileWidth, tileHeight);
+					}
 				}
 				page.setColor(ch.color());
 				page.drawString(ch.toString(), x, y);
 			}
+			highlighted.clear();
 		}
 	}
 
@@ -91,5 +100,13 @@ public class GameScreen extends JPanel implements KeyListener {
 	@Override
 	public void keyTyped(KeyEvent e)
 	{}
+
+	public List<Coordinate> getHighlighted() {
+		return highlighted;
+	}
+
+	public void setHighlighted(List<Coordinate> highlighted) {
+		this.highlighted = highlighted;
+	}
 
 }

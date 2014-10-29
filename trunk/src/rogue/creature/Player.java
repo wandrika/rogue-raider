@@ -11,6 +11,7 @@ import rogue.items.Weapon;
 import jade.ui.Terminal;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
+import jade.util.datatype.MessageQueue;
 
 public class Player extends Creature
 {
@@ -18,8 +19,8 @@ public class Player extends Creature
 	private List<Monster> enemiesSeen = new ArrayList<Monster>();
 	//range is equal to the player's line of sight
 	//fades only slightly
-	public static LightSource minersLight = new LightSource(' ',"minersLight",true,15,15,90);
-	public static Weapon pistols = new Weapon("pistols",2,100000,6);
+	//public static LightSource minersLight = new LightSource(' ',"minersLight",true,15,15,90);
+	public static Weapon pistols = new Weapon("pistols",2,100000,6,1,1);
 
 	public Player()
 	{
@@ -28,14 +29,15 @@ public class Player extends Creature
 		this.actualHitPoints = 15;
 		this.defense = 0;
 		this.accuracy = 75;
+		this.shootingAccuracy = 50;
 		this.damageMin = 1;
 		this.damageMax = 2;
 		this.name = "you";
 		this.experience = 0;
 		this.healingSpeed = 20;
 		this.sight = 15;
-		minersLight.setCollectable(true);
-		minersLight.attachTo(this);
+		//minersLight.setCollectable(true);
+		//minersLight.attachTo(this);
 		pistols.attachTo(this);
 	}
 
@@ -91,7 +93,19 @@ public class Player extends Creature
 			case 70: //'f'
 				if(!enemiesSeen.isEmpty()){
 					Monster chosen = enemiesSeen.get(0);
-					
+					term.highlight(this.aim(chosen.x(), chosen.y()));
+					//teraz musi hrac zmenit target alebo potvrdit vyber
+					int enemyIndex = 0;
+					int nextKey=0;
+					do {
+						nextKey = term.getKey();
+						if (nextKey==84){ //'t' change target
+							enemyIndex = (enemyIndex+1) % enemiesSeen.size();
+							chosen = enemiesSeen.get(enemyIndex);
+							term.highlight(this.aim(chosen.x(), chosen.y()));
+						}
+					}while (nextKey!=10 && nextKey!=27);
+					if(nextKey == 10) this.shoot(chosen.x(), chosen.y(), pistols);
 				}
 				break;
 			case 44: //','
@@ -102,6 +116,7 @@ public class Player extends Creature
 				else{
 					f = this.getFirstHeldItem(Flare.class);
 					if(f!=null) f.turnOn();
+					else MessageQueue.add("You have no more flares.");
 				}
 				break;
 			default:
@@ -112,7 +127,6 @@ public class Player extends Creature
 					if(f!=null) {
 						world.removeActor(f);
 						f.attachTo(this);
-						System.out.println("I have the flare now");
 					}
 				}
 				break;

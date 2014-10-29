@@ -6,6 +6,7 @@ import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import java.awt.Color;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -56,6 +57,8 @@ public abstract class Terminal
      */
     public abstract int getKey() throws InterruptedException;
 
+    public abstract void highlight(List<Coordinate> tiles);
+    
     /**
      * Places a character into the buffer at the specified coordinates.
      * @param coord the location of the character in the buffer

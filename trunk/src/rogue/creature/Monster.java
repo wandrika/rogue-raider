@@ -1,6 +1,8 @@
 package rogue.creature;
 
+import jade.core.Actor;
 import jade.util.Dice;
+import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
 
@@ -50,6 +52,7 @@ public class Monster extends Creature
 		List<Field> fields = new ArrayList<Field>();
 		fields.addAll(Arrays.asList(Monster.class.getDeclaredFields())); 
 		fields.addAll(Arrays.asList(Creature.class.getDeclaredFields())); 
+		fields.addAll(Arrays.asList(Actor.class.getDeclaredFields())); 
 		for (Entry<String, String> entry: props.entrySet()){
 
 			Field f = getFieldByName(fields, entry.getKey());
@@ -59,6 +62,9 @@ public class Monster extends Creature
 				try {
 					if (f.getType().equals(String.class)) {
 						f.set(this, entry.getValue());
+					}
+					else if (f.getType().equals(ColoredChar.class)) {
+						//this is set by MonsterCatalog
 					}
 					else{
 						f.setInt(this, Integer.parseInt(entry.getValue()));
