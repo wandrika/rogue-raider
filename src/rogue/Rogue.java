@@ -35,7 +35,7 @@ public class Rogue {
                 for(int y = 0; y < world.height(); y++)
                     term.bufferChar(x, y, world.look(x, y));
             term.refreshScreen();
-
+System.out.println();
             world.tick();
             if (m.expired()) {
             	m = MonsterCatalog.createRandomMonsterForLevel(1);
