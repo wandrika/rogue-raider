@@ -97,19 +97,18 @@ public class ColoredChar
     
     
     public ColoredChar applyLight(Light light){
-    	//FIXME flatten to range 0-250, keep distances
-    	int red = Math.min(255, this.color.getRed() * light.getRed() / 200);
-    	int green = Math.min(255, this.color.getGreen() * light.getGreen() / 200);
-    	int blue = Math.min(255, this.color.getBlue() * light.getBlue() / 200);
-    	if(red<50 && green<50 && blue<50){
-    		red=50;green=50;blue=50;
-    	}
+
+    	int red = this.color.getRed() * (light.getRed() / light.getNumberOfComponents())/255;
+    	int green = this.color.getGreen() * (light.getGreen() / light.getNumberOfComponents())/255;
+    	int blue = this.color.getBlue() * (light.getBlue() / light.getNumberOfComponents())/255;
+    		
     	int bred=0,bgreen=0,bblue=0;
     	if (this.background!=null){
-    		bred = Math.min(255, this.background.getRed() * light.getRed() / 200);
-        	bgreen = Math.min(255, this.background.getGreen() * light.getGreen() / 200);
-        	bblue = Math.min(255, this.background.getBlue() * light.getBlue() / 200);
+    		bred = (this.background.getRed() + light.getRed() / (light.getNumberOfComponents()))/2;
+        	bgreen = (this.background.getGreen() + light.getGreen() / (light.getNumberOfComponents()))/2;
+        	bblue = (this.background.getBlue() + light.getBlue() / (light.getNumberOfComponents()))/2;
     	}
+    	System.out.println(this.color.getRed()+","+this.color.getGreen()+","+this.color.getBlue()+" + "+light.getRed()+","+light.getGreen()+","+light.getBlue()+" = "+red+","+green+","+blue);
     	return ColoredChar.create(this.ch, new Color(red,green,blue), new Color(bred,bgreen,bblue));
     }
     

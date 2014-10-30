@@ -24,6 +24,7 @@ public class Light {
 	private int greenRand;
 	private int blueRand;
 	private int rand;
+	private int numberOfComponents = 1;
 
 	public Light(Color color, int redRand, int greenRand, int blueRand, int rand) {
 		super();
@@ -34,6 +35,7 @@ public class Light {
 		this.greenRand = greenRand;
 		this.blueRand = blueRand;
 		this.rand = rand;
+		this.numberOfComponents = 1;
 	}
 
 	public void copyFrom(Light other){
@@ -44,6 +46,7 @@ public class Light {
 		this.greenRand = other.greenRand;
 		this.blueRand = other.blueRand;
 		this.rand = other.rand;
+		this.numberOfComponents = other.numberOfComponents;
 	}
 
 	public void addLight(int[] light){
@@ -51,6 +54,7 @@ public class Light {
 			this.red += light[0];
 			this.green += light[1];
 			this.blue += light[2];
+			this.numberOfComponents++;
 		}
 	}
 
@@ -58,19 +62,22 @@ public class Light {
 		this.red = r;
 		this.green = g;
 		this.blue = b;
+		this.numberOfComponents = 1;
 	}
 
 	public void setLights(Color c){
 		this.red = c.getRed();
 		this.green = c.getGreen();
 		this.blue = c.getBlue();
+		this.numberOfComponents = 1;
 	}
 	
 	public void multiplyLight(int[] light, int multiplier){
 		if(light.length == 3){
-			this.red += light[0]*multiplier/200;
-			this.green += light[1]*multiplier/200;
-			this.blue += light[2]*multiplier/200;
+			this.red += light[0]*multiplier / 100;
+			this.green += light[1]*multiplier / 100;
+			this.blue += light[2]*multiplier / 100;
+			this.numberOfComponents++;
 		}
 	}
 
@@ -114,4 +121,8 @@ public class Light {
 		this.rand = r;
 	}
 
+	public int getNumberOfComponents() {
+		return numberOfComponents;
+	}
+	
 }

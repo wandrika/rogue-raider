@@ -48,7 +48,7 @@ public abstract class World
     {
         Guard.argumentsArePositive(width, height);
         
-        baseLight = new Color(-8092540);
+        baseLight = new Color(-8882056);
         this.width = width;
         this.height = height;
         grid = new Tile[width][height];

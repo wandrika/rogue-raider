@@ -85,6 +85,7 @@ public class LightSource extends Actor {
 			Collection<Coordinate> fieldView = lightView.getViewField(world, this.x(), this.y(), (int)radius);
 			//FIXME pass param for !isMinersLight;
 			for (Coordinate coord: fieldView){
+				//kolko percent z plneho svetla by malo byt na danom poli
 				lightMultiplier = (int) (100 - (100 - fadeToPercent) * 
 						(Math.sqrt((coord.x()- this.x()) * (coord.x()-this.x()) + (coord.y()-this.y()) * (coord.y()-this.y())) / (radius)));
 				world.lightAt(coord.x(), coord.y()).multiplyLight(colorComponents,lightMultiplier);
