@@ -91,12 +91,7 @@ public abstract class Creature extends Actor implements Camera
 	}
 
 	public List<Coordinate> aim(int x, int y){
-		List<Coordinate> shootingPath = aimer.getPath(world, this.x(), this.y(), x, y);
-		if(shootingPath!=null){
-			//FIXME ukazat policko
-			//world.setTile(face, passable, x, y)
-		}
-		return shootingPath;
+		return aimer.getPath(world, this.x(), this.y(), x, y);
 	}
 
 	void addExperience(int exp) {	

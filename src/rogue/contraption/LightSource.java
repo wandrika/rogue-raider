@@ -72,18 +72,15 @@ public class LightSource extends Actor {
 			int fadeToPercent;
 			float radius;
 
-			radius = Dice.global.nextInt(rangeMin, rangeMax);//15
-			//radius /= 100;
+			radius = Dice.global.nextInt(rangeMin, rangeMax);
 
-			randComponent = Dice.global.nextInt(0, lightColor.getRand());//0
-			colorComponents[0] = randComponent + lightColor.getRed() + Dice.global.nextInt(0, lightColor.getRedRand());//153 + 0-10
-			colorComponents[1] = randComponent + lightColor.getGreen() + Dice.global.nextInt(0, lightColor.getGreenRand());//153 + 0-10
-			colorComponents[2] = randComponent + lightColor.getBlue() + Dice.global.nextInt(0, lightColor.getBlueRand());//153 + 0-10
-
-			fadeToPercent = radialFadeToPercent;//90
+			randComponent = Dice.global.nextInt(0, lightColor.getRand());
+			colorComponents[0] = randComponent + lightColor.getRed() + Dice.global.nextInt(0, lightColor.getRedRand());
+			colorComponents[1] = randComponent + lightColor.getGreen() + Dice.global.nextInt(0, lightColor.getGreenRand());
+			colorComponents[2] = randComponent + lightColor.getBlue() + Dice.global.nextInt(0, lightColor.getBlueRand());
+			fadeToPercent = radialFadeToPercent;
 
 			Collection<Coordinate> fieldView = lightView.getViewField(world, this.x(), this.y(), (int)radius);
-			//FIXME pass param for !isMinersLight;
 			for (Coordinate coord: fieldView){
 				//kolko percent z plneho svetla by malo byt na danom poli
 				lightMultiplier = (int) (100 - (100 - fadeToPercent) * 
