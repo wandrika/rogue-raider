@@ -12,10 +12,6 @@ import java.awt.Color;
  *
  */
 public class Light {
-	
-	public Light() {
-		super();
-	}
 
 	private int red;
 	private int green;
@@ -25,6 +21,7 @@ public class Light {
 	private int blueRand;
 	private int rand;
 	private int numberOfComponents = 1;
+	//TODO if necessary, add alpha channel
 
 	public Light(Color color, int redRand, int greenRand, int blueRand, int rand) {
 		super();
@@ -81,6 +78,16 @@ public class Light {
 		}
 	}
 
+	/**
+	 * Set to average of all light components.
+	 */
+	public void normalize(){
+		this.red /= this.numberOfComponents;
+		this.green /= this.numberOfComponents;
+		this.blue /= this.numberOfComponents;
+		this.numberOfComponents = 1;
+	}
+	
 	public Color getColor() {
 		return new Color(red,green,blue);
 	}
