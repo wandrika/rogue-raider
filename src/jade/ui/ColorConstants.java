@@ -26,7 +26,7 @@ public class ColorConstants {
 		
 		lights.put("minersLight", new Light(new Color(180,180,180),0,0,0,0));
 		lights.put("torchLight", new Light(Color.orange,0,15,7,0));
-		lights.put("flareLight", new Light(new Color(-62709),10,10,10,0));//-14483685
+		lights.put("flareLight", new Light(new Color(-14483685),10,10,10,0));//
 	}
 	
 	public static Light getLight(String name){
