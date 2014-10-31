@@ -28,13 +28,11 @@ public class PathFinderTest
 
 			@Override
 			public boolean isCreatureAt(int x, int y) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 
 			@Override
 			public boolean isCreatureAt(Coordinate coord) {
-				// TODO Auto-generated method stub
 				return false;
 			}};
         start = new Coordinate(4, 4);
