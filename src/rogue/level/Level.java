@@ -5,7 +5,7 @@ import jade.gen.Generator;
 import jade.gen.map.*;
 import jade.util.datatype.Coordinate;
 import rogue.creature.Creature;
-import rogue.creature.Player;
+import rogue.player.Player;
 
 public class Level extends World
 {
