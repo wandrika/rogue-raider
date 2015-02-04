@@ -22,7 +22,7 @@ import rogue.contraption.AbstractDoor;
 import rogue.contraption.LightSource;
 import rogue.creature.Creature;
 import rogue.creature.Monster;
-import rogue.creature.Player;
+import rogue.player.Player;
 
 /**
  * Represents a game world on which {@code Actor} can interact.

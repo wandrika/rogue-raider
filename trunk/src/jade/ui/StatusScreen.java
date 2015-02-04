@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import rogue.Rogue;
 import rogue.creature.Creature;
 import rogue.creature.Monster;
-import rogue.creature.Player;
+import rogue.player.Player;
 
 /**
  * This panes shows health (actual hit points) of the player and all the monsters in visual range.

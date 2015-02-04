@@ -6,12 +6,12 @@ import jade.ui.Terminal;
 import rogue.creature.Monster;
 import rogue.creature.MonsterCatalog;
 import rogue.creature.MonsterMapException;
-import rogue.creature.Player;
 import rogue.level.Level;
+import rogue.player.Player;
 
 public class Rogue {
 	//we need to reference the player from outside
-	private static Player player = new Player();
+	private static Player player = Player.getInstance();
 	
 	public static Player getPlayer(){
 		return player;
@@ -20,6 +20,7 @@ public class Rogue {
     public static void main(String[] args) throws InterruptedException, MonsterMapException
     {   
     	World world = new Level(80, 24, player);
+    	player.initPlayer();
         Monster m = MonsterCatalog.createRandomMonsterForLevel(1);
         world.addActor(m);
         //najprv je nutne vytvorit level, hraca a prisery a az potom terminal, ktory na ne odkazuje (hlavne StatusScreen)

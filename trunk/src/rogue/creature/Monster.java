@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import rogue.player.Player;
+
 public class Monster extends Creature 
 {
 	protected Status status;

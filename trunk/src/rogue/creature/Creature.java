@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import rogue.items.Weapon;
+import rogue.player.Player;
 
 import jade.core.Actor;
 import jade.fov.ModifiedRayCaster;
@@ -106,7 +107,7 @@ public abstract class Creature extends Actor implements Camera
 		//    	}
 	}
 
-	void heal(){
+	protected void heal(){
 		if (this.healingSpeed>0 && this.actualHitPoints<this.hitPoints){
 			this.healing +=1;
 			if (this.healing >= this.healingSpeed){
@@ -196,6 +197,7 @@ public abstract class Creature extends Actor implements Camera
 				MessageQueue.add(Capitalizer.capitalize(this.name)+" missed "+enemy.name+".");
 			}
 		}
+		//TODO vieme strielat aj do inych veci?
 	}
 
 	@Override
