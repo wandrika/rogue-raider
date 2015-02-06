@@ -32,7 +32,7 @@ public abstract class Creature extends Actor implements Camera
 	protected int experience;
 	protected int healingSpeed; //za kolko tahov zregeneruje 1 HP
 	protected int healing;
-
+	protected int inventorySize = 0;
 
 
 	protected ModifiedRayCaster view = new ModifiedRayCaster();
@@ -91,6 +91,13 @@ public abstract class Creature extends Actor implements Camera
 
 	}
 
+	@Override
+	public void pickUp(Actor item) {
+		if(this.holds.size() < inventorySize){
+			super.pickUp(item);
+		}
+	}
+	
 	public List<Coordinate> aim(int x, int y){
 		return aimer.getPath(world, this.x(), this.y(), x, y);
 	}

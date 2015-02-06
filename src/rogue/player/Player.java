@@ -10,8 +10,10 @@ import rogue.creature.Monster;
 import rogue.items.Flare;
 import rogue.items.Weapon;
 
+import jade.core.Actor;
 import jade.ui.Terminal;
 import jade.util.datatype.Coordinate;
+import jade.util.datatype.MessageQueue;
 
 public class Player extends Creature
 {
@@ -26,8 +28,9 @@ public class Player extends Creature
 	int enemyIndex = 0;
 	//range is equal to the player's line of sight
 	//fades only slightly
+	//TODO: keep the light or not?
 	public static LightSource minersLight = new LightSource(' ',"minersLight",true,15,15,90);
-	public static Weapon pistols = new Weapon("pistols",2,100000,6,1,1);
+	public static Weapon pistols = new Weapon("pistols",2,1000,6,1,1);
 
 	private PlayerState state = PlayerState.MOVING;
 	boolean moveFinished = false;
@@ -46,14 +49,15 @@ public class Player extends Creature
 		this.experience = 0;
 		this.healingSpeed = 20;
 		this.sight = 15;
-
+		this.inventorySize = 15;
 	}
 
 	public void initPlayer(){
 		//init the inventory here
-		pistols.attachTo(this);
+		pistols.setUnlimited(true);
+		this.pickUp(pistols);
 		minersLight.setCollectable(true);
-		minersLight.attachTo(this);
+		this.pickUp(minersLight);
 	}
 	
 	//must be called immediately after creating the game terminals
@@ -61,6 +65,16 @@ public class Player extends Creature
 		this.term = t;
 	}
 
+	@Override
+	public void pickUp(Actor item) {
+		if(this.holds.size() >= inventorySize){
+			MessageQueue.add("Your backpack is full!");
+		}
+		else{
+			super.pickUp(item);
+		}
+	}
+	
 	public int getEnemyIndex() {
 		return enemyIndex;
 	}
@@ -99,13 +113,11 @@ public class Player extends Creature
 
 	@Override
 	public void act(){
-
 		this.heal();
 		moveFinished = false;
 		while (!moveFinished){
 			handleInput();
 		}
-
 	}
 
 	private void handleInput(){

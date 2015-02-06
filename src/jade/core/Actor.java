@@ -226,22 +226,39 @@ public abstract class Actor
 	 * not be accessible through {@code world.getActorAt()} or {@code world.getActorsAt()}.
 	 * @param holder the new holder of the {@code Actor}
 	 */
-	public void attachTo(Actor holder)
-	{
-		Guard.verifyState(!held());
-		Guard.verifyState(!bound());
-		Guard.argumentIsNotNull(holder);
-		Guard.validateArgument(holder != this);
-		Guard.verifyState(collectable);
+//	public void attachTo(Actor holder)
+//	{
+//		Guard.verifyState(!held());
+//		Guard.verifyState(!bound());
+//		Guard.argumentIsNotNull(holder);
+//		Guard.validateArgument(holder != this);
+//		Guard.verifyState(collectable);
+//
+//		this.holder = holder;
+//		propagatePos(holder.pos);
+//		if(holder.bound())
+//		{
+//			setWorld(holder.world);
+//			world.registerActor(this);
+//		}
+//		holder.holds.add(this);
+//	}
+	
+	public void pickUp(Actor item){
+		Guard.argumentIsNotNull(item);
+		Guard.verifyState(!item.held());
+		Guard.verifyState(!item.bound());
+		Guard.validateArgument(item != this);
+		Guard.verifyState(item.collectable);
 
-		this.holder = holder;
-		propagatePos(holder.pos);
-		if(holder.bound())
+		item.holder = this;
+		item.propagatePos(pos);
+		if(this.bound())
 		{
-			setWorld(holder.world);
-			world.registerActor(this);
+			item.setWorld(this.world);
+			world.registerActor(item);
 		}
-		holder.holds.add(this);
+		this.holds.add(item);
 	}
 
 	/**

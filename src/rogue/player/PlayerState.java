@@ -36,17 +36,20 @@ public enum PlayerState {
     			}
     			pl.moveFinished = true;
     			return MOVING;
-    		default:
+    		default: //direction keys or nothing
     			Direction dir = Direction.keyToDir(key);
     			if(dir != null){
     				pl.move(dir);
     				f = pl.world().getActorAt(Flare.class, pl.x(), pl.y());
     				if(f!=null) {
     					pl.world().removeActor(f);
-    					f.attachTo(pl);
+    					pl.pickUp(f);
     				}
+    				pl.moveFinished = true;
     			}
-    			pl.moveFinished = true;
+    			else{ //unmapped key
+    				pl.moveFinished = false;
+    			}
     			return MOVING;
     		}
         }
@@ -63,13 +66,13 @@ public enum PlayerState {
 				pl.term.highlight(pl.aim(chosen.x(), chosen.y()));
 				pl.moveFinished = false;
 				return AIMING;
-			
-    		case 10:
+    		case 70: //'f'
+    		case 10: //Enter
     			chosen = pl.enemiesSeen.get(pl.enemyIndex);
     			pl.shoot(chosen.x(), chosen.y(), pl.pistols);
     			pl.moveFinished = true;
     			return MOVING;
-    		case 27:
+    		case 27: //Esc
     			pl.moveFinished = false;
     			return MOVING;
     		default: 
@@ -78,7 +81,6 @@ public enum PlayerState {
     		
         }
     };
-
 
     //really WEIRD that the abstract method must be defined after all the implementations, but here we go:
     public abstract PlayerState handleInput(int key);
