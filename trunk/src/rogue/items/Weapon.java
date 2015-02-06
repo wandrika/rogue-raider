@@ -8,6 +8,7 @@ import jade.util.datatype.MessageQueue;
 
 public class Weapon extends Actor{
 
+	boolean unlimited = false;
 	int ammoPerShot;
 	int maxShots;
 	int actualShots = 0;
@@ -25,6 +26,14 @@ public class Weapon extends Actor{
 		this.range = range;
 		this.maxDamage = maxDamage;
 		this.minDamage = minDamage;
+	}
+
+	public boolean isUnlimited() {
+		return unlimited;
+	}
+
+	public void setUnlimited(boolean unlimited) {
+		this.unlimited = unlimited;
 	}
 
 	public int getRange() {
@@ -53,7 +62,7 @@ public class Weapon extends Actor{
 	 */
 	public int shoot(){
 		if(actualShots>0){
-			actualShots--;
+			if(!unlimited) actualShots--;
 			return ammoPerShot;
 		}
 		else{
