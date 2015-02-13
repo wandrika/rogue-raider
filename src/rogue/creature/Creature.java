@@ -2,7 +2,9 @@ package rogue.creature;
 
 import java.awt.Color;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import rogue.items.Weapon;
 import rogue.player.Player;
@@ -14,6 +16,7 @@ import jade.ui.Camera;
 import jade.ui.ColorConstants;
 import jade.util.Capitalizer;
 import jade.util.Dice;
+import jade.util.Guard;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.MessageQueue;
@@ -33,10 +36,12 @@ public abstract class Creature extends Actor implements Camera
 	protected int healingSpeed; //za kolko tahov zregeneruje 1 HP
 	protected int healing;
 	protected int inventorySize = 0;
-
+	//only for physical collectible items
+	protected Set<Actor> inventory = new HashSet<Actor>();
 
 	protected ModifiedRayCaster view = new ModifiedRayCaster();
 	protected Bresenham aimer = new Bresenham();
+	protected Coordinate actualAim;
 
 	//protected ShadowCaster view = new ShadowCaster();
 
@@ -92,14 +97,41 @@ public abstract class Creature extends Actor implements Camera
 	}
 
 	@Override
-	public void pickUp(Actor item) {
-		if(this.holds.size() < inventorySize){
-			super.pickUp(item);
+	public void attachItem(Actor item){
+		Guard.argumentIsNotNull(item);
+		//this is for collectible items
+		if (item.isCollectible()){
+			if(this.inventory.size() < inventorySize){
+				super.attachItem(item);
+				inventory.add(item);
+			}
+		}
+		else{
+			super.attachItem(item);
 		}
 	}
-	
+
+	@Override
+	public void dropItem(Actor item) {
+		Guard.verifyState(item.isHeldBy(this));
+		if(item.isCollectible()){
+			inventory.remove(item);
+		}
+		super.dropItem(item);
+	}
+
 	public List<Coordinate> aim(int x, int y){
+		//remember where we aim
+		actualAim = new Coordinate(x,y);
 		return aimer.getPath(world, this.x(), this.y(), x, y);
+	}
+
+	public Coordinate getActualAim() {
+		return actualAim;
+	}
+
+	public void setActualAim(Coordinate actualAim) {
+		this.actualAim = actualAim;
 	}
 
 	void addExperience(int exp) {	
@@ -205,6 +237,7 @@ public abstract class Creature extends Actor implements Camera
 			}
 		}
 		//TODO vieme strielat aj do inych veci?
+		actualAim = null;
 	}
 
 	@Override

@@ -244,7 +244,7 @@ public class ActorTest extends CoreTest
     public void expirePropagates()
     {
         Actor holder = new ConcreteActor(ColoredChar.create('D'));
-        holder.pickUp(actor);
+        holder.attachItem(actor);
         holder.expire();
         Assert.assertTrue(actor.expired());
     }
@@ -253,7 +253,7 @@ public class ActorTest extends CoreTest
     public void attachSetsHolder()
     {
         Actor holder = new ConcreteActor(ColoredChar.create('D'));
-        holder.pickUp(actor);
+        holder.attachItem(actor);
         Assert.assertSame(holder, actor.holder());
         Assert.assertTrue(actor.isHeldBy(holder));
         Assert.assertTrue(actor.held());
@@ -264,7 +264,7 @@ public class ActorTest extends CoreTest
     {
         Actor holder = new ConcreteActor(ColoredChar.create('D'));
         world.addActor(holder, 5, 5);
-        holder.pickUp(actor);
+        holder.attachItem(actor);
         Assert.assertSame(world, actor.world());
         Assert.assertTrue(world.getActors(Actor.class).contains(actor));
     }
@@ -275,8 +275,8 @@ public class ActorTest extends CoreTest
         Actor held = new ConcreteActor(ColoredChar.create('*'));
         Actor holder = new ConcreteActor(ColoredChar.create('D'));
         world.addActor(holder, 4, 4);
-        actor.pickUp(held);
-        holder.pickUp(actor);
+        actor.attachItem(held);
+        holder.attachItem(actor);
 
         Assert.assertEquals(3, world.getActors(Actor.class).size());
         Assert.assertTrue(world.getActors(Actor.class).contains(held));
@@ -292,7 +292,7 @@ public class ActorTest extends CoreTest
     {
         Actor holder = new ConcreteActor(ColoredChar.create('D'));
         world.addActor(holder, 5, 5);
-        holder.pickUp(actor);
+        holder.attachItem(actor);
         actor.setPos(5, 5);
     }
 
@@ -301,7 +301,7 @@ public class ActorTest extends CoreTest
     {
         Actor holder = new ConcreteActor(ColoredChar.create('D'));
         world.addActor(holder, 3, 4);
-        holder.pickUp(actor);
+        holder.attachItem(actor);
         Assert.assertEquals(3, actor.x());
         Assert.assertEquals(4, actor.y());
         holder.setPos(5, 3);
@@ -321,8 +321,8 @@ public class ActorTest extends CoreTest
         Actor held = new ConcreteActor(ColoredChar.create('*'));
         Actor holder = new ConcreteActor(ColoredChar.create('D'));
         world.addActor(holder, 3, 4);
-        actor.pickUp(held);
-        holder.pickUp(actor);
+        actor.attachItem(held);
+        holder.attachItem(actor);
         Assert.assertEquals(3, held.x());
         Assert.assertEquals(4, held.y());
         holder.setPos(5, 3);
@@ -341,7 +341,7 @@ public class ActorTest extends CoreTest
     {
         Actor holder = new ConcreteActor(ColoredChar.create('D'));
         world.addActor(holder, 3, 6);
-        holder.pickUp(actor);
+        holder.attachItem(actor);
 
         Assert.assertFalse(world.getActorsAt(Actor.class, 3, 6).contains(actor));
         Assert.assertTrue(world.getActors(Actor.class).contains(actor));
@@ -352,8 +352,8 @@ public class ActorTest extends CoreTest
     {
         Actor holder = new ConcreteActor(ColoredChar.create('D'));
         Actor wannabe = new ConcreteActor(ColoredChar.create('.'));
-        holder.pickUp(actor);
-        wannabe.pickUp(actor);
+        holder.attachItem(actor);
+        wannabe.attachItem(actor);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -361,20 +361,20 @@ public class ActorTest extends CoreTest
     {
         Actor holder = new ConcreteActor(ColoredChar.create('D'));
         world.addActor(actor, 5, 5);
-        holder.pickUp(actor);
+        holder.attachItem(actor);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void attachSelf()
     {
-        actor.pickUp(actor);
+        actor.attachItem(actor);
     }
 
     @Test(expected = IllegalStateException.class)
     public void attachDisablesAddActor()
     {
         Actor holder = new ConcreteActor(ColoredChar.create('D'));
-        holder.pickUp(actor);
+        holder.attachItem(actor);
         world.addActor(actor, 5, 5);
     }
 
@@ -383,7 +383,7 @@ public class ActorTest extends CoreTest
     {
         Actor holder = new ConcreteActor(ColoredChar.create('D'));
         world.addActor(holder, 5, 5);
-        holder.pickUp(actor);
+        holder.attachItem(actor);
         world.removeActor(actor);
     }
     
@@ -391,7 +391,7 @@ public class ActorTest extends CoreTest
     public void holdsOne()
     {
         Actor holder = new ConcreteActor(ColoredChar.create('D'));
-        holder.pickUp(actor);
+        holder.attachItem(actor);
 
         Assert.assertEquals(1, holder.getHeldItems(Actor.class).size());
         Assert.assertTrue(holder.getHeldItems(Actor.class).contains(actor));
@@ -402,8 +402,8 @@ public class ActorTest extends CoreTest
     {
         Actor held1 = new ConcreteActor(ColoredChar.create('*'));
         Actor held2 = new ConcreteActor(ColoredChar.create('|'));
-        actor.pickUp(held1);
-        actor.pickUp(held2);
+        actor.attachItem(held1);
+        actor.attachItem(held2);
 
         Assert.assertEquals(2, actor.getHeldItems(Actor.class).size());
         Assert.assertTrue(actor.getHeldItems(Actor.class).contains(held1));
@@ -415,8 +415,8 @@ public class ActorTest extends CoreTest
     {
         Actor heldA = new ActorA();
         Actor heldB = new ActorB();
-        actor.pickUp(heldA);
-        actor.pickUp(heldB);
+        actor.attachItem(heldA);
+        actor.attachItem(heldB);
 
         Assert.assertEquals(2, actor.getHeldItems(Actor.class).size());
         Assert.assertTrue(actor.getHeldItems(Actor.class).contains(heldA));
@@ -444,8 +444,8 @@ public class ActorTest extends CoreTest
 
         Actor heldA = new ActorA();
         Actor heldB = new ActorB();
-        actor.pickUp(heldA);
-        actor.pickUp(heldB);
+        actor.attachItem(heldA);
+        actor.attachItem(heldB);
 
         Collection<Actor> results = actor.getAllHeldItems();
         Assert.assertEquals(2, results.size());
@@ -459,8 +459,8 @@ public class ActorTest extends CoreTest
     public void detachUnsetsHolder()
     {
         Actor holder = new ConcreteActor(ColoredChar.create('D'));
-        holder.pickUp(actor);
-        actor.dropFromHolder();
+        holder.attachItem(actor);
+        holder.dropItem(actor);;
 
         Assert.assertNull(actor.holder());
         Assert.assertFalse(actor.isHeldBy(holder));
@@ -471,16 +471,10 @@ public class ActorTest extends CoreTest
     public void detachReleaseActor()
     {
         Actor holder = new ConcreteActor(ColoredChar.create('D'));
-        holder.pickUp(actor);
-        actor.dropFromHolder();
+        holder.attachItem(actor);
+        holder.dropItem(actor);;
 
         Assert.assertFalse(holder.getHeldItems(Actor.class).contains(actor));
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void detachNonHeld()
-    {
-        actor.dropFromHolder();
     }
 
     @Test
@@ -488,8 +482,8 @@ public class ActorTest extends CoreTest
     {
         Actor holder = new ConcreteActor(ColoredChar.create('D'));
         world.addActor(holder, 3, 5);
-        holder.pickUp(actor);
-        actor.dropFromHolder();
+        holder.attachItem(actor);
+        holder.dropItem(actor);;
 
         Assert.assertEquals(3, actor.x());
         Assert.assertEquals(5, actor.y());
@@ -511,8 +505,8 @@ public class ActorTest extends CoreTest
     {
         Actor holder = new ConcreteActor(ColoredChar.create('D'));
         world.addActor(holder, 3, 5);
-        holder.pickUp(actor);
-        actor.dropFromHolder();
+        holder.attachItem(actor);
+        holder.dropItem(actor);;
 
         actor.setPos(6, 3);
         Assert.assertTrue(world.getActorsAt(Actor.class, 6, 3).contains(actor));
@@ -531,9 +525,9 @@ public class ActorTest extends CoreTest
         Actor held = new ConcreteActor(ColoredChar.create('*'));
         Actor holder = new ConcreteActor(ColoredChar.create('D'));
         world.addActor(holder, 3, 5);
-        actor.pickUp(held);
-        holder.pickUp(actor);
-        actor.dropFromHolder();
+        actor.attachItem(held);
+        holder.attachItem(actor);
+        holder.dropItem(actor);;
 
         actor.setPos(6, 3);
         Assert.assertTrue(world.getActorsAt(Actor.class, 6, 3).contains(actor));

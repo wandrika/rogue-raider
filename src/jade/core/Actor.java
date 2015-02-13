@@ -2,6 +2,7 @@ package jade.core;
 
 import jade.util.Guard;
 import jade.util.Lambda;
+import jade.util.Lambda.FilterFunc;
 import jade.util.datatype.ColoredChar;
 import jade.util.datatype.Coordinate;
 import jade.util.datatype.Direction;
@@ -31,7 +32,17 @@ public abstract class Actor
 	protected boolean expired;
 	protected Actor holder;
 	protected Set<Actor> holds;
-	protected boolean collectable = false;
+	protected boolean collectible = false;
+
+	/**
+	 * For filtering collectible items from other actors.
+	 */
+	public static FilterFunc<Actor> collectibleFilter = new FilterFunc<Actor>() {
+		@Override
+		public boolean filter(Actor element){
+			return element.collectible;
+		}
+	};
 
 	/**
 	 * Constructs a new {@code Actor} with the given face.
@@ -202,15 +213,15 @@ public abstract class Actor
 		for(Actor held : holds)
 			held.expire();
 		if(this.held())
-			this.dropFromHolder();
+			holder.dropItem(this);
 	}
 
-	public boolean isCollectable() {
-		return collectable;
+	public boolean isCollectible() {
+		return collectible;
 	}
 
-	public void setCollectable(boolean collectable) {
-		this.collectable = collectable;
+	public void setCollectible(boolean collectable) {
+		this.collectible = collectable;
 	}
 
 
@@ -220,39 +231,24 @@ public abstract class Actor
 
 	/**
 	 * Attaches this {@code Actor} to another. Note that the {@code Actor} must not be currently
-	 * held or bound to a {@code World} when calling this method. The position of this {@code Actor}
+	 * held. The position of this {@code Actor}
 	 * will follow the holder, and the {@code Actor} will be bound to the holder's {@code World}.
 	 * However, the {@code Actor} will not be placed on the {@code World} grid and will therefore
 	 * not be accessible through {@code world.getActorAt()} or {@code world.getActorsAt()}.
 	 * @param holder the new holder of the {@code Actor}
 	 */
-//	public void attachTo(Actor holder)
-//	{
-//		Guard.verifyState(!held());
-//		Guard.verifyState(!bound());
-//		Guard.argumentIsNotNull(holder);
-//		Guard.validateArgument(holder != this);
-//		Guard.verifyState(collectable);
-//
-//		this.holder = holder;
-//		propagatePos(holder.pos);
-//		if(holder.bound())
-//		{
-//			setWorld(holder.world);
-//			world.registerActor(this);
-//		}
-//		holder.holds.add(this);
-//	}
-	
-	public void pickUp(Actor item){
-		Guard.argumentIsNotNull(item);
+	public void attachItem(Actor item){
+		//this is for spells & effects
 		Guard.verifyState(!item.held());
+		if(item.bound()){
+			item.world().removeActor(item);
+		}
 		Guard.verifyState(!item.bound());
+		Guard.argumentIsNotNull(item);
 		Guard.validateArgument(item != this);
-		Guard.verifyState(item.collectable);
-
+		
 		item.holder = this;
-		item.propagatePos(pos);
+		item.propagatePos(this.pos);
 		if(this.bound())
 		{
 			item.setWorld(this.world);
@@ -266,15 +262,14 @@ public abstract class Actor
 	 * currently be held when calling this method. If the {@code Actor} is bound, it will be placed
 	 * on the {@code World} at the current position of the holder.
 	 */
-	public void dropFromHolder()
+	public void dropItem(Actor item)
 	{
-		Guard.verifyState(held());
-
-		if(bound())
-			world.addToGrid(this);
-		propagatePos(holder.pos.mutableCopy());
-		holder.holds.remove(this);
-		holder = null;
+		Guard.verifyState(item.isHeldBy(this));
+		if(item.bound())
+			world.addToGrid(item);
+		item.propagatePos(this.pos.mutableCopy());
+		this.holds.remove(item);
+		item.holder = null;
 	}
 
 	/**
