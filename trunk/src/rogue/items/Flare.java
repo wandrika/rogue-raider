@@ -8,7 +8,8 @@ public class Flare extends LightSource{
 	
 	public Flare() {
 		super('-', "flareLight", false, 6, 6, 30);
-		this.collectable = true;
+		this.collectible = true;
+		this.name = "flare";
 	}
 	
 	@Override

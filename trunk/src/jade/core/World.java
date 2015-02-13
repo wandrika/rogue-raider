@@ -266,6 +266,18 @@ public abstract class World
     }
 
     /**
+     * Returns a {@code Collection<Actor>} of all collectible {@code Actor} located
+     * at (x, y).
+     * @param x the x location being queried
+     * @param y the y location being queried
+     * @return a {@code Collection<Actor>} of all collectible {@code Actor} located
+     *         at (x, y)
+     */
+    public Collection<Actor> getCollectiblesAt(int x, int y) {
+        return Lambda.toSet(Lambda.filter(grid[x][y].actors, Actor.collectibleFilter));
+    }
+    
+    /**
      * Returns a {@code Collection<T extends Actor>} of all {@code Actor} of the given class at the
      * given location.
      * @param <T> the generic type of the class type to be returned

@@ -18,7 +18,7 @@ public class Weapon extends Actor{
 	
 	public Weapon(String name, int ammoPerShot, int maxShots, int range, int maxDamage, int minDamage) {
 		super(ColoredChar.create((char)172, Color.lightGray));
-		this.collectable = true;
+		this.collectible = true;
 		this.name = name;
 		this.ammoPerShot = ammoPerShot;
 		this.maxShots = maxShots;

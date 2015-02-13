@@ -34,6 +34,7 @@ public class Player extends Creature
 
 	private PlayerState state = PlayerState.MOVING;
 	boolean moveFinished = false;
+	private boolean logMessages = false;
 
 	private Player()
 	{
@@ -49,15 +50,17 @@ public class Player extends Creature
 		this.experience = 0;
 		this.healingSpeed = 20;
 		this.sight = 15;
-		this.inventorySize = 15;
+		this.inventorySize = 5;
 	}
 
 	public void initPlayer(){
-		//init the inventory here
+		//init the inventory here, do it without logging
 		pistols.setUnlimited(true);
-		this.pickUp(pistols);
-		minersLight.setCollectable(true);
-		this.pickUp(minersLight);
+		this.attachItem(pistols);
+		minersLight.setCollectible(true);
+		this.attachItem(minersLight);
+		
+		this.logMessages = true;
 	}
 	
 	//must be called immediately after creating the game terminals
@@ -66,12 +69,13 @@ public class Player extends Creature
 	}
 
 	@Override
-	public void pickUp(Actor item) {
-		if(this.holds.size() >= inventorySize){
-			MessageQueue.add("Your backpack is full!");
+	public void attachItem(Actor item) {
+		if(inventory.size() >= inventorySize && item.isCollectible()){
+			if(logMessages) MessageQueue.add("Your backpack is full!");
 		}
 		else{
-			super.pickUp(item);
+			super.attachItem(item);
+			if(logMessages) MessageQueue.add("You pick up "+item.getName());
 		}
 	}
 	

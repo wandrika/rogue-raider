@@ -1,5 +1,8 @@
 package rogue.player;
 
+import java.util.Collection;
+
+import jade.core.Actor;
 import jade.util.datatype.Direction;
 import jade.util.datatype.MessageQueue;
 import rogue.creature.Monster;
@@ -22,12 +25,16 @@ public enum PlayerState {
     				pl.enemyIndex = 0;
     				
     			}
+    			else {
+    				MessageQueue.add("Shoot where?");
+    				pl.term.refreshScreen();
+    			}
     			pl.moveFinished = false;
     			return AIMING;
     		case 44: //','
     			Flare f = pl.getLitFlare();
     			if(f!=null){
-    				f.dropFromHolder();
+    				pl.dropItem(f);
     			}
     			else{
     				f = pl.getFirstHeldItem(Flare.class);
@@ -40,10 +47,9 @@ public enum PlayerState {
     			Direction dir = Direction.keyToDir(key);
     			if(dir != null){
     				pl.move(dir);
-    				f = pl.world().getActorAt(Flare.class, pl.x(), pl.y());
-    				if(f!=null) {
-    					pl.world().removeActor(f);
-    					pl.pickUp(f);
+    				Collection<Actor> collectibles = pl.world().getCollectiblesAt(pl.x(), pl.y());
+    				for(Actor c: collectibles){
+    					pl.attachItem(c);
     				}
     				pl.moveFinished = true;
     			}
